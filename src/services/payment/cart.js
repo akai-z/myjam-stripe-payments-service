@@ -32,7 +32,7 @@ async function update(paymentIntentId, total, lineItems) {
 
   order.updateItems(paymentIntent.id, lineItems)
 
-  return paymentIntent
+  return updatedPaymentIntent
 }
 
 module.exports = {
