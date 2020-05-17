@@ -2,9 +2,13 @@ const stripe = rootRequire('services/integrations/stripe')
 const airtable = rootRequire('services/integrations/airtable')
 
 async function applyCode(code, paymentIntentId) {
-  const paymentIntent = await stripe.paymentIntent(paymentIntentId)
   const discount = await codeDiscount(code)
 
+  if (!discount) {
+    return paymentIntent
+  }
+
+  const paymentIntent = await stripe.paymentIntent(paymentIntentId)
   let amount = paymentIntent.amount
 
   if (paymentIntent.metadata.coupon_code) {
@@ -49,7 +53,7 @@ async function codeDiscount(code) {
 
   return records.length
     ? records[0].get('discount') * 100
-    : 0
+    : null
 }
 
 async function updatePaymentIntent(
