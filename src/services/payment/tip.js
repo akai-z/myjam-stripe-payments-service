@@ -7,6 +7,10 @@ async function setAmount(tipAmount, paymentIntentId) {
     return paymentIntent
   }
 
+  if (!tipAmount && tipAmount !== 0) {
+    tipAmount = 0
+  }
+
   let updatedAmount = paymentIntent.amount
   tipAmount *= 100
 
