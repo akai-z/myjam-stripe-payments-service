@@ -3,7 +3,7 @@ const coupon = rootRequire('services/payment/coupon')
 const routeName = 'coupon-code'
 
 function setRoute(app) {
-  app.post(`/${routeName}`, routeHandler)
+  app.put(`/${routeName}`, routeHandler)
 }
 
 async function routeHandler(req, res) {
