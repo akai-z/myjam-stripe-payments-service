@@ -1,3 +1,5 @@
+'use strict'
+
 const stripe = require('stripe')(process.env.STRIPE_API_SECRET_KEY, stripeOptions)
 
 const webhookSignatureHeader = 'stripe-signature'

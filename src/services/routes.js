@@ -1,3 +1,5 @@
+'use strict'
+
 const fs = require('fs')
 const cors = require('cors')
 
@@ -9,7 +11,7 @@ function init(app, express) {
 }
 
 function setRoutes(app, express) {
-  fs.readdirSync(srcPath('services/routes')).forEach(route => {
+  fs.readdirSync(srcPath('services/routes')).forEach((route) => {
     rootRequire(`services/routes/${route}`).setRoute(app, express)
   })
 }

@@ -1,10 +1,12 @@
+'use strict'
+
 const stripe = rootRequire('services/integrations/stripe')
 const cart = rootRequire('services/payment/cart')
 
 const routeName = 'order'
 
 function setRoute(app, express) {
-  app.post(`/${routeName}`, express.raw({ type: "application/json" }), routeHandler)
+  app.post(`/${routeName}`, express.raw({ type: 'application/json' }), routeHandler)
 }
 
 function routeHandler(req, res) {

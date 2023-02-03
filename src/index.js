@@ -1,3 +1,5 @@
+'use strict'
+
 const core = require('./bootstrap')
 
 core.routes.init(core.app, core.express)

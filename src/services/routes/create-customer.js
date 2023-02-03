@@ -1,10 +1,12 @@
+'use strict'
+
 const stripe = rootRequire('services/integrations/stripe')
 const customer = rootRequire('services/payment/customer')
 
 const routeName = 'customer'
 
 function setRoute(app, express) {
-  app.post(`/${routeName}`, express.raw({ type: "application/json" }), routeHandler)
+  app.post(`/${routeName}`, express.raw({ type: 'application/json' }), routeHandler)
 }
 
 function routeHandler(req, res) {

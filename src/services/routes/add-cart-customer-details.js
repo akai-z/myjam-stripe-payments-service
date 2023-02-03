@@ -1,3 +1,5 @@
+'use strict'
+
 const cart = rootRequire('services/payment/cart')
 
 const routeName = 'cart/customer'

@@ -1,3 +1,5 @@
+'use strict'
+
 const airtable = require('airtable')
 
 const bulkActionRecordsLimit = 10
@@ -5,8 +7,7 @@ const bulkActionChunkDelay = 1000 // In milliseconds.
 const base = baseInit()
 
 function baseInit() {
-  return new airtable({ apiKey: process.env.AIRTABLE_API_KEY })
-    .base(process.env.AIRTABLE_BASE_ID)
+  return new airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID)
 }
 
 async function createRecord(table, data, callback = defaultCallback) {
@@ -63,17 +64,14 @@ async function deleteRecords(table, recordsIds) {
 
 function destroySync(table, recordsIds) {
   return new Promise((resolve, reject) => {
-    base(table).destroy(
-      recordsIds,
-      (err, record) => {
-        if (err) {
-          console.error(err)
-          reject(err)
-        }
-
-        resolve(record)
+    base(table).destroy(recordsIds, (err, record) => {
+      if (err) {
+        console.error(err)
+        reject(err)
       }
-    )
+
+      resolve(record)
+    })
   })
 }
 
@@ -93,7 +91,7 @@ function isBulkActionRecordsAboveLimit(data) {
 }
 
 function setBulkActionChunkDelay() {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, bulkActionChunkDelay)
   })
 }
