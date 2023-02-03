@@ -1,3 +1,5 @@
+'use strict'
+
 function amount(total) {
   return !isFreeShipping(total)
     ? parseInt(parseFloat(process.env.SHIPPING_AMOUNT).toFixed(2) * 100)

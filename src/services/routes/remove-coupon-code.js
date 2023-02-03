@@ -1,3 +1,5 @@
+'use strict'
+
 const coupon = rootRequire('services/payment/coupon')
 
 const routeName = 'coupon-code'

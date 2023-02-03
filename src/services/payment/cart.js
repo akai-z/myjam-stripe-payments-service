@@ -1,3 +1,5 @@
+'use strict'
+
 const stripe = rootRequire('services/integrations/stripe')
 const airtable = rootRequire('services/integrations/airtable')
 const order = rootRequire('services/payment/order')
@@ -8,8 +10,8 @@ async function create(total, lineItems, lineItemsMetadata) {
   const paymentIntent = await stripe.createPaymentIntent({
     amount: totalInteger(total) + shippingAmount,
     metadata: {
-      "shipping_amount": shippingAmount,
-      "line_items": lineItemsMetadata
+      shipping_amount: shippingAmount,
+      line_items: lineItemsMetadata
     }
   })
 
@@ -42,10 +44,10 @@ async function update(paymentIntentId, total, lineItems, lineItemsMetadata) {
   const paymentIntentParams = {
     amount: total,
     metadata: {
-      "shipping_amount": shippingAmount,
-      "line_items": lineItemsMetadata,
-      "coupon_code": couponCode,
-      "coupon_discount": couponDiscount
+      shipping_amount: shippingAmount,
+      line_items: lineItemsMetadata,
+      coupon_code: couponCode,
+      coupon_discount: couponDiscount
     }
   }
 
@@ -60,10 +62,9 @@ async function update(paymentIntentId, total, lineItems, lineItemsMetadata) {
 }
 
 async function addCustomerDetails(paymentIntentId, customerDetails) {
-  await stripe.updatePaymentIntent(
-    paymentIntentId,
-    { metadata: { "customer_details": JSON.stringify(customerDetails) } }
-  )
+  await stripe.updatePaymentIntent(paymentIntentId, {
+    metadata: { customer_details: JSON.stringify(customerDetails) }
+  })
 
   saveCustomerDetailsRecord(paymentIntentId, customerDetails)
 }
@@ -76,17 +77,17 @@ async function createOrder(paymentIntent) {
     : null
 
   const data = {
-    "payment_intent_id": paymentIntent.id,
-    "customer_name": billing.name,
-    "email": chargesData.billing_details.email,
-    "tip": tip,
-    "coupon_code": paymentIntent.metadata.coupon_code,
-    "total": parseFloat((paymentIntent.amount / 100).toFixed(2)),
-    "date": new Date(chargesData.created * 1000).toISOString(),
-    "address": [billing.address.line1, billing.address.line2].filter(Boolean).join(' - '),
-    "post_code": billing.address.postal_code,
-    "city": billing.address.city,
-    "phone_number": billing.phone
+    payment_intent_id: paymentIntent.id,
+    customer_name: billing.name,
+    email: chargesData.billing_details.email,
+    tip: tip,
+    coupon_code: paymentIntent.metadata.coupon_code,
+    total: parseFloat((paymentIntent.amount / 100).toFixed(2)),
+    date: new Date(chargesData.created * 1000).toISOString(),
+    address: [billing.address.line1, billing.address.line2].filter(Boolean).join(' - '),
+    post_code: billing.address.postal_code,
+    city: billing.address.city,
+    phone_number: billing.phone
   }
 
   const cartItems = await items(paymentIntent.id)
@@ -95,7 +96,7 @@ async function createOrder(paymentIntent) {
   console.log(`[ORDER_LINE_ITEMS] - [PAYMENT_INTENT_ID: ${paymentIntent.id}]`)
   console.log(JSON.stringify(cartItems))
 
-  cartItems.forEach(item => {
+  cartItems.forEach((item) => {
     delete item.fields['item_id']
     delete item.fields['payment_intent_id']
     delete item.fields['created_at']
@@ -116,10 +117,9 @@ function addItems(paymentIntentId, items) {
 }
 
 async function items(paymentIntentId) {
-  return await airtable.list(
-    process.env.AIRTABLE_CART_ITEMS_VIEW,
-    { filter: `payment_intent_id = "${paymentIntentId}"` }
-  )
+  return await airtable.list(process.env.AIRTABLE_CART_ITEMS_VIEW, {
+    filter: `payment_intent_id = "${paymentIntentId}"`
+  })
 }
 
 async function updateItems(paymentIntentId, items) {
@@ -146,7 +146,7 @@ async function itemRecordIds(paymentIntentId) {
 
   const records = await airtable.list(process.env.AIRTABLE_CART_ITEMS_VIEW, selectParams)
 
-  records.forEach(record => {
+  records.forEach((record) => {
     recordIds.push(record.id)
   })
 
@@ -172,7 +172,9 @@ async function customerRecordId(paymentIntentId) {
   }
 
   const records = await airtable.list(process.env.AIRTABLE_CART_CUSTOMERS_VIEW, selectParams)
-  records.forEach(record => { recordId = record.id })
+  records.forEach((record) => {
+    recordId = record.id
+  })
 
   return recordId
 }

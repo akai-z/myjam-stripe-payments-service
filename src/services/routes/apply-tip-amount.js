@@ -1,3 +1,5 @@
+'use strict'
+
 const tip = rootRequire('services/payment/tip')
 
 const routeName = 'tip-amount'

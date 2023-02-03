@@ -1,3 +1,5 @@
+'use strict'
+
 const stripe = rootRequire('services/integrations/stripe')
 const airtable = rootRequire('services/integrations/airtable')
 const shipping = rootRequire('services/payment/shipping')
@@ -17,12 +19,7 @@ async function applyCode(code, paymentIntentId) {
     amount += parseInt(paymentIntent.metadata.coupon_discount)
   }
 
-  return await updatePaymentIntent(
-    paymentIntentId,
-    amount - discount,
-    code,
-    discount
-  )
+  return await updatePaymentIntent(paymentIntentId, amount - discount, code, discount)
 }
 
 async function removeCode(paymentIntentId) {
@@ -51,17 +48,15 @@ async function codeDiscount(code) {
 
   const records = await airtable.list(process.env.AIRTABLE_COUPON_VIEW, airtableSelectParams)
 
-  return records.length
-    ? parseInt(parseFloat(records[0].get('discount')).toFixed(2) * 100)
-    : null
+  return records.length ? parseInt(parseFloat(records[0].get('discount')).toFixed(2) * 100) : null
 }
 
 async function updatePaymentIntent(paymentIntentId, updateAmount, couponCode, couponDiscount) {
   const params = {
     amount: updateAmount,
     metadata: {
-      "coupon_code": couponCode,
-      "coupon_discount": couponDiscount
+      coupon_code: couponCode,
+      coupon_discount: couponDiscount
     }
   }
 

@@ -1,3 +1,5 @@
+'use strict'
+
 const stripe = rootRequire('services/integrations/stripe')
 
 async function create(paymentIntent) {

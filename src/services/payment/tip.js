@@ -1,3 +1,5 @@
+'use strict'
+
 const stripe = rootRequire('services/integrations/stripe')
 
 async function setAmount(tipAmount, paymentIntentId) {
@@ -20,7 +22,7 @@ async function setAmount(tipAmount, paymentIntentId) {
 
   const paymentIntentParams = {
     amount: updatedAmount + tipAmount,
-    metadata: { "tip_amount": tipAmount || null }
+    metadata: { tip_amount: tipAmount || null }
   }
 
   return await stripe.updatePaymentIntent(paymentIntentId, paymentIntentParams)
